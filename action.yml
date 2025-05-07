@@ -1,0 +1,21 @@
+name: Semgrep
+descriptions: Run Semgrep on your codebase
+inputs:
+  token:
+    description: Semgrep AppSec Platform token
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Code
+      uses: actions/checkout@4
+    - name: Run Semgrep
+      run: |
+        semgrep ci --sarif-output=semgrep-report.sarif
+      env:
+        SEMGREP_APP_TOKEN: ${{ inputs.token }}
+    - name: Upload SARIF report
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: semgrep-report.sarif
+        category: semgrep-scan
