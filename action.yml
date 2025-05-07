@@ -7,13 +7,13 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout Code
-      uses: actions/checkout@4
     - name: Run Semgrep
+      shell: bash
       run: |
         semgrep ci --sarif-output=semgrep-report.sarif
       env:
         SEMGREP_APP_TOKEN: ${{ inputs.token }}
+
     - name: Upload SARIF report
       uses: github/codeql-action/upload-sarif@v3
       with:
